@@ -27,8 +27,7 @@ class Settings(BaseSettings):
     These parameters can be configured with environment variables.
     """
 
-    # This means a .env file can be used to overload these settings
-    # ex: "OPENAI_API_KEY=my_key" will set openai_api_key over the default above
+   
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
@@ -64,15 +63,16 @@ async def main():
             )
         ),
         synthesizer=FileSynthesizer(
-            FileSynthesizerConfig(
-                file_path="27171216-44100-2-e9d20b5bba90b.mp3",  # Path to the audio file
-                chunk_size=1212121212121,
-                audio_encoding="mulaw",
-                sampling_rate=8000,
+            FileSynthesizerConfig
+            (
+                file_path="result.mp3",  # Path to the audio file
+                # chunk_size=1212121212121,
+                chunk_size=10096,
+                audio_encoding="linear16",
+                sampling_rate=44100,
             )
         ),
     )
-
     await conversation.start()
     print("Conversation started, press Ctrl+C to end")
 
@@ -85,6 +85,7 @@ async def main():
     while conversation.is_active():
         chunk = await microphone_input.get_audio()
         conversation.receive_audio(chunk)
+    
 
     print("Conversation terminated.")
 
